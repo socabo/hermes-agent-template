@@ -16,6 +16,12 @@ fi
 
 [ ! -f /data/.hermes/.env ] && touch /data/.hermes/.env
 
+# Initialise Obsidian vault on the persistent volume if not already present.
+OBSIDIAN_VAULT_PATH="${OBSIDIAN_VAULT_PATH:-/data/vault}"
+mkdir -p "${OBSIDIAN_VAULT_PATH}/.obsidian"
+[ ! -f "${OBSIDIAN_VAULT_PATH}/.obsidian/app.json" ]       && echo '{}' > "${OBSIDIAN_VAULT_PATH}/.obsidian/app.json"
+[ ! -f "${OBSIDIAN_VAULT_PATH}/.obsidian/workspace.json" ] && echo '{}' > "${OBSIDIAN_VAULT_PATH}/.obsidian/workspace.json"
+
 # Clear any stale gateway PID file left over from the previous container.
 # `hermes gateway` writes /data/.hermes/gateway.pid on start but does not
 # remove it on SIGTERM. Since /data is a persistent volume, the file
